@@ -52,6 +52,23 @@ async def name(message:Message, state:FSMContext):
     await message.answer("Сколько тебе лет?")
     await state.set_state(Form.age)
 
+@dp.message(Form.age)
+async def age(message:Message, state:FSMContext):
+    await state.update_data(age=message.text)
+    await message.answer("Из какого ты города?")
+    await state.set_state(Form.city)
+
+@dp.message(Form.city)
+async def city(message:Message, state:FSMContext):
+    await state.update_data(city=message.text)
+    user_data = await state.get_data()
+
+    conn = sqlite3.connect("user_data.db")
+    cur = conn.cursor()
+    cur.execute('''
+    INSERT INTO (name, age, city)   values (?, ?, ?)''', (user_data['name'], user_data['age'], user_data['city']))
+    conn.commit()
+    conn.close()
 
 async def main():
     await dp.start_polling(bot)
