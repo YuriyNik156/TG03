@@ -11,6 +11,8 @@ import sqlite3
 import aiohttp
 import logging
 
+from pyexpat.errors import messages
+
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
@@ -38,6 +40,18 @@ def init_db():
     conn.close()
 
 init_db()
+
+@dp.message(CommandStart())
+async def start(message:Message, state:FSMContext):
+    await message.answer("Привет! Как тебя зовут?")
+    await state.set_state(Form.name)
+
+@dp.message(Form.name)
+async def name(message:Message, state:FSMContext):
+    await state.update_data(name=message.text)
+    await message.answer("Сколько тебе лет?")
+    await state.set_state(Form.age)
+
 
 async def main():
     await dp.start_polling(bot)
