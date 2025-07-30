@@ -29,7 +29,7 @@ class Form(StatesGroup):
     city = State()
 
 def init_db():
-    conn = sqlite3.connect('user_data.db')
+    conn = sqlite3.connect('../user_data.db')
     cur = conn.cursor()
     cur.execute('''
     CREATE TABLE IF NOT EXISTS users (
@@ -65,7 +65,7 @@ async def city(message:Message, state:FSMContext):
     await state.update_data(city=message.text)
     user_data = await state.get_data()
 
-    conn = sqlite3.connect("user_data.db")
+    conn = sqlite3.connect("../user_data.db")
     cur = conn.cursor()
     cur.execute('''
     INSERT INTO users (name, age, city)   values (?, ?, ?)''', (user_data['name'], user_data['age'], user_data['city']))

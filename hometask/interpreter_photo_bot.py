@@ -34,7 +34,7 @@ async def send_voice(message:Message):
 # Напишите код для сохранения всех фото, которые отправляет пользователь боту в папке img
 @dp.message(F.photo)
 async def save_photo(message:Message):
-    os.makedirs("img", exist_ok=True) # Создаем папку img
+    os.makedirs("../img", exist_ok=True) # Создаем папку img
     await bot.download(message.photo[-1], destination=f"img/{message.photo[-1].file_id}.jpg")
     await message.answer("Фото сохранено в папке img")
 
